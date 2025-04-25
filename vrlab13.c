@@ -62,16 +62,22 @@ int main(int argc, char *argv[])
         fprintf(stderr, "offset is past end of file\n");
         exit(EXIT_FAILURE);
     }
-
-    if (argc >= 4) {
-        length = atoi(argv[3]);
-        if (offset + length > sb.st_size)
-            length = sb.st_size - offset;
-        /* Can't display bytes past end of file */
-    } else {  
-        /* if you made it here there is no length arg so just display to EOF */
+if (argc == 3) {
+    offset = 0;
+  } else if (argc >= 4) {
+    offset = atoi(argv[3]);
+  }
+if (argc == 5) {
+                length = atoi(argv[4]);
+                if (offset + length > sb.st_size)
+                        length = sb.st_size - offset;
+                /* Can't display bytes past end of file */
+        } else {
+                /* if you made it here there is no length arg so just display to EOF */
         length = sb.st_size - offset;
-    }
+        }
+
+
 
     /* This maps your input file to virtual memory address: addr */
     char *addr = mmap(NULL, length + offset - pa_offset, PROT_READ,
