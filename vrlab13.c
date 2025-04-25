@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
     if (fstat(fd, &sb) == -1)
         perror("fstat");
     printf("filesize: %ld bytes\n", sb.st_size); 
-    offset = atoi(argv[2]);
+    offset = atoi(argv[4]);
     /* determine page offset in case you need to re-align things;
        this is just finding your starting page */
     pa_offset = offset & ~(sysconf(_SC_PAGE_SIZE) - 1); /* ~ is bitwise not */ 
@@ -89,6 +89,12 @@ int main(int argc, char *argv[])
     if (dest == MAP_FAILED)
         perror("mmap:");
     memcpy(dest, addr + offset - pa_offset, length);
+    
+    ssize_t written = write(fd2,dest,length);
+
+    if (written == length) {
+        printf(" ");
+    }
     /* ssize_t s;
        write(STDOUT_FILENO,"\n",2); 
        write(STDOUT_FILENO, "\n", 1);
